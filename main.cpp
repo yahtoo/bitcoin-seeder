@@ -397,8 +397,8 @@ extern "C" void* ThreadStats(void*) {
   return nullptr;
 }
 
-static const string mainnet_seeds[] = {"mainnet-seed.yahtoo.fun", ""};
-static const string testnet_seeds[] = {"testnet-seed.yahtoo.fun", ""};
+static const string mainnet_seeds[] = {"mainnetseed.yahtoo.fun", ""};
+static const string testnet_seeds[] = {"testnetseed.yahtoo.fun", ""};
 static const string *seeds = mainnet_seeds;
 
 extern "C" void* ThreadSeeder(void*) {
