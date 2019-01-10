@@ -35,7 +35,7 @@ public:
   CDnsSeedOpts() : nThreads(96), nDnsThreads(4), nPort(53), mbox(NULL), ns(NULL), host(NULL), tor(NULL), fUseTestNet(false), fWipeBan(false), fWipeIgnore(false), ipv4_proxy(NULL), ipv6_proxy(NULL) {}
 
   void ParseCommandLine(int argc, char **argv) {
-    static const char *help = "Bitcoin-seeder\n"
+    static const char *help = "Bytom-seeder\n"
                               "Usage: %s -h <host> -n <ns> [-m <mbox>] [-t <threads>] [-p <port>]\n"
                               "\n"
                               "Options:\n"
@@ -397,17 +397,13 @@ extern "C" void* ThreadStats(void*) {
   return nullptr;
 }
 
-static const string mainnet_seeds[] = {"dnsseed.bluematt.me", "bitseed.xf2.org", "dnsseed.bitcoin.dashjr.org", "seed.bitcoin.sipa.be", ""};
-static const string testnet_seeds[] = {"testnet-seed.alexykot.me",
-                                       "testnet-seed.bitcoin.petertodd.org",
-                                       "testnet-seed.bluematt.me",
-                                       "testnet-seed.bitcoin.schildbach.de",
-                                       ""};
+static const string mainnet_seeds[] = {"mainnet-seed.yahtoo.fun", ""};
+static const string testnet_seeds[] = {"testnet-seed.yahtoo.fun", ""};
 static const string *seeds = mainnet_seeds;
 
 extern "C" void* ThreadSeeder(void*) {
   if (!fTestNet){
-    db.Add(CService("kjy2eqzk4zwi5zd3.onion", 8333), true);
+    db.Add(CService("kjy2eqzk4zwi5zd3.onion", 46657), true);
   }
   do {
     for (int i=0; seeds[i] != ""; i++) {
@@ -504,16 +500,16 @@ int main(int argc, char **argv) {
   printf("Starting seeder...");
   pthread_create(&threadSeed, NULL, ThreadSeeder, NULL);
   printf("done\n");
-  printf("Starting %i crawler threads...", opts.nThreads);
-  pthread_attr_t attr_crawler;
-  pthread_attr_init(&attr_crawler);
-  pthread_attr_setstacksize(&attr_crawler, 0x20000);
-  for (int i=0; i<opts.nThreads; i++) {
-    pthread_t thread;
-    pthread_create(&thread, &attr_crawler, ThreadCrawler, &opts.nThreads);
-  }
-  pthread_attr_destroy(&attr_crawler);
-  printf("done\n");
+  // printf("Starting %i crawler threads...", opts.nThreads);
+  // pthread_attr_t attr_crawler;
+  // pthread_attr_init(&attr_crawler);
+  // pthread_attr_setstacksize(&attr_crawler, 0x20000);
+  // for (int i=0; i<opts.nThreads; i++) {
+  //   pthread_t thread;
+  //   pthread_create(&thread, &attr_crawler, ThreadCrawler, &opts.nThreads);
+  // }
+  // pthread_attr_destroy(&attr_crawler);
+  // printf("done\n");
   pthread_create(&threadStats, NULL, ThreadStats, NULL);
   pthread_create(&threadDump, NULL, ThreadDumper, NULL);
   void* res;

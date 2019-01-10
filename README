@@ -1,7 +1,7 @@
-bitcoin-seeder
+Bytom-seeder
 ==============
 
-Bitcoin-seeder is a crawler for the Bitcoin network, which exposes a list
+Bytom-seeder is a crawler for the Bytom network, which exposes a list
 of reliable nodes via a built-in DNS server.
 
 Features:
