@@ -383,7 +383,7 @@ extern "C" void* ThreadStats(void*) {
       printf("\n\n\n\x1b[3A");
     }
     else
-      printf("\x1b[2K\x1b[u");
+       printf("\x1b[2K\x1b[u");
     printf("\x1b[s");
     uint64_t requests = 0;
     uint64_t queries = 0;
@@ -497,9 +497,9 @@ int main(int argc, char **argv) {
     }
     printf("done\n");
   }
-  printf("Starting seeder...");
-  pthread_create(&threadSeed, NULL, ThreadSeeder, NULL);
-  printf("done\n");
+  // printf("Starting seeder...");
+  // pthread_create(&threadSeed, NULL, ThreadSeeder, NULL);
+  // printf("done\n");
   // printf("Starting %i crawler threads...", opts.nThreads);
   // pthread_attr_t attr_crawler;
   // pthread_attr_init(&attr_crawler);

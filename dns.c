@@ -34,6 +34,8 @@ struct in6_pktinfo
 # error "can't determine socket option"
 #endif
 
+extern bool fTestNet;
+
 union control_data {
   struct cmsghdr cmsg;
   unsigned char data[DSTADDR_DATASIZE];
@@ -325,17 +327,23 @@ ssize_t static dnshandle(dns_opt_t *opt, const unsigned char *inbuf, size_t insi
   }
   
   // A/AAAA records
+  //mannet 45.79.213.28:46657,198.74.61.131:46657,212.111.41.245:46657,47.100.214.154:46657,47.100.109.199:46657,47.100.105.165:46657
+  //testnet 52.83.107.224:46656,52.83.107.224:46656,52.83.251.197:46656
   if ((typ == TYPE_A || typ == TYPE_AAAA || typ == QTYPE_ANY) && (cls == CLASS_IN || cls == QCLASS_ANY)) {
-    addr_t addr[32];
-    int naddr = opt->cb((void*)opt, name, addr, 32, typ == TYPE_A || typ == QTYPE_ANY, typ == TYPE_AAAA || typ == QTYPE_ANY);
+    addr_t mainnetaddr[32]={{v:4,{{45,79,213,28}}},{v:4,{{198,74,61,131}}},{v:4,{{212,111,41,245}}},{v:4,{{47,100,214,154}}},{v:4,{{47,100,109,199}}},{v:4,{{47,100,105,165}}}};
+    addr_t testnetaddr[32]={{v:4,{{52,83,107,224}}},{v:4,{{52,83,251,197}}}};
+    // struct stu *ps;
+
+
+    // int naddr = opt->cb((void*)opt, name, addr, 32, typ == TYPE_A || typ == QTYPE_ANY, typ == TYPE_AAAA || typ == QTYPE_ANY);
+    int naddr;
+    addr_t * addr;
+    naddr = fTestNet ? sizeof(testnetaddr):sizeof(mainnetaddr);
+    addr = fTestNet ? &testnetaddr[0]:&mainnetaddr[0];
     int n = 0;
     while (n < naddr) {
       int ret = 1;
-      if (addr[n].v == 4)
-         ret = write_record_a(&outpos, outend - max_auth_size, "", offset, CLASS_IN, opt->datattl, &addr[n]);
-      else if (addr[n].v == 6)
-         ret = write_record_aaaa(&outpos, outend - max_auth_size, "", offset, CLASS_IN, opt->datattl, &addr[n]);
-//      printf("wrote A record: %i\n", ret);
+         ret = write_record_a(&outpos, outend - max_auth_size, "", offset, CLASS_IN, opt->datattl, addr+n);
       if (!ret) {
         n++;
         outbuf[7]++;
